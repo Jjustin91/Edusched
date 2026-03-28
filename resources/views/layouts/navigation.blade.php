@@ -3,34 +3,31 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : (Auth::user()->role === 'faculty' ? route('faculty.schedule') : route('student.home')) }}">
                         <x-application-logo class="block h-14 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-    
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white hover:text-[#2BB3C0] flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                        </svg>
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')" class="text-white hover:text-[#2BB3C0] flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        {{ __('Calendar') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:text-[#2BB3C0] flex items-center gap-2">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {{ __('Appointments') }}
-                    </x-nav-link>
-
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-white hover:text-[#2BB3C0]">
+                            Admin Dashboard
+                        </x-nav-link>
+                    @elseif(Auth::user()->role === 'faculty')
+                        <x-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')" class="text-white hover:text-[#2BB3C0]">
+                            My Schedule
+                        </x-nav-link>
+                        <x-nav-link :href="route('faculty.calendar')" :active="request()->routeIs('faculty.calendar')" class="text-white hover:text-[#2BB3C0]">
+                            Calendar
+                        </x-nav-link>
+                    @elseif(Auth::user()->role === 'student')
+                        <x-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')" class="text-white hover:text-[#2BB3C0]">
+                            Home
+                        </x-nav-link>
+                        <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:text-[#2BB3C0]">
+                            Appointments
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -88,30 +85,27 @@
     </div>
 
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-    
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white hover:bg-[#102A43] hover:text-[#2BB3C0] flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link :href="route('calendar')" :active="request()->routeIs('calendar')" class="text-white hover:bg-[#102A43] hover:text-[#2BB3C0] flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                {{ __('Calendar') }}
-            </x-responsive-nav-link>
-
-            <x-responsive-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:bg-[#102A43] hover:text-[#2BB3C0] flex items-center gap-3">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                {{ __('Appointments') }}
-            </x-responsive-nav-link>
-
-        </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    @if(Auth::user()->role === 'admin')
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-white hover:text-[#2BB3C0]">
+                            Admin Dashboard
+                        </x-nav-link>
+                    @elseif(Auth::user()->role === 'faculty')
+                        <x-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')" class="text-white hover:text-[#2BB3C0]">
+                            My Schedule
+                        </x-nav-link>
+                        <x-nav-link :href="route('faculty.calendar')" :active="request()->routeIs('faculty.calendar')" class="text-white hover:text-[#2BB3C0]">
+                            Calendar
+                        </x-nav-link>
+                    @elseif(Auth::user()->role === 'student')
+                        <x-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')" class="text-white hover:text-[#2BB3C0]">
+                            Home
+                        </x-nav-link>
+                        <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:text-[#2BB3C0]">
+                            Appointments
+                        </x-nav-link>
+                    @endif
+                </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4 flex items-center">

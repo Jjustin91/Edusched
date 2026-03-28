@@ -8,26 +8,39 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// ADMIN ROUTES
+Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard'); 
+    })->name('admin.dashboard');
+});
 
-Route::get('/calendar', function () {
-    return view('calendar');
-})->middleware(['auth', 'verified'])->name('calendar');
+// FACULTY ROUTES
+Route::middleware(['auth', 'verified', 'role:faculty'])->group(function () {
+    Route::get('/faculty/schedule', function () {
+        return view('faculty.schedule'); 
+    })->name('faculty.schedule');
 
-Route::get('/appointments', function () {
-    return view('appointments');
-})->middleware(['auth', 'verified'])->name('appointments');
+    Route::get('/faculty/calendar', function () {
+        return view('calendar');
+    })->name('faculty.calendar');
+});
 
+// STUDENT ROUTES
+Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
+    Route::get('/student/home', function () {
+        return view('student.home'); 
+    })->name('student.home');
+
+    Route::get('/student/appointments', [AppointmentController::class, 'index'])
+        ->name('appointments');
+});
+
+// SHARED ROUTES
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
-Route::get('/appointments', [AppointmentController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('appointments');
 
 require __DIR__.'/auth.php';

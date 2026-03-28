@@ -19,12 +19,20 @@
             @if (Route::has('login'))
                 <nav class="flex items-center justify-end gap-4">
                     @auth
-                        <a href="{{ url('/dashboard') }}" class="px-5 py-2 text-[#2BB3C0] font-semibold hover:text-white transition">Dashboard</a>
+                        {{-- Dynamically route the user to their specific dashboard based on role --}}
+                        @php
+                            $dashboardRoute = route('student.home'); // Default fallback
+                            if(Auth::user()->role === 'admin') {
+                                $dashboardRoute = route('admin.dashboard');
+                            } elseif(Auth::user()->role === 'faculty') {
+                                $dashboardRoute = route('faculty.schedule');
+                            }
+                        @endphp
+                        
+                        <a href="{{ $dashboardRoute }}" class="px-5 py-2 text-[#2BB3C0] font-semibold hover:text-white transition">Dashboard</a>
                     @else
                         <a href="{{ route('login') }}" class="px-5 py-2 text-[#BCCCDC] font-semibold hover:text-white transition">Log in</a>
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}" class="px-6 py-2 border border-[#2BB3C0] text-[#2BB3C0] rounded-lg font-semibold hover:bg-[#2BB3C0] hover:text-white transition-all duration-300">Register</a>
-                        @endif
+                        {{-- Register link removed because admin handles account creation --}}
                     @endauth
                 </nav>
             @endif
@@ -56,8 +64,9 @@
                     </ul>
 
                     <div>
-                        <a href="{{ route('register') }}" class="inline-block px-10 py-3 bg-gradient-to-r from-[#2BB3C0] to-[#0B4F6C] text-white rounded-xl font-bold shadow-lg hover:shadow-[#2BB3C0]/20 hover:-translate-y-1 transition-all duration-300">
-                            Get Started Now
+                        {{-- Changed from Register to Login --}}
+                        <a href="{{ route('login') }}" class="inline-block px-10 py-3 bg-gradient-to-r from-[#2BB3C0] to-[#0B4F6C] text-white rounded-xl font-bold shadow-lg hover:shadow-[#2BB3C0]/20 hover:-translate-y-1 transition-all duration-300">
+                            Login to EduSched
                         </a>
                     </div>
                 </div>
