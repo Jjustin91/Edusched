@@ -1,4 +1,21 @@
 <x-app-layout>
+    @php
+        $calendarEvents = $appointments->filter(function($app) {
+            return $app->status === 'approved';
+        })->map(function($app) {
+            return [
+                'title' => 'Meeting with ' . $app->faculty->name,
+                // Use strict formatting to ignore browser timezone shifts
+                'start' => \Carbon\Carbon::parse($app->appointment_date)->format('Y-m-d\TH:i:s'),
+                // Automatically make the calendar block 1 hour long
+                'end' => \Carbon\Carbon::parse($app->appointment_date)->addHour()->format('Y-m-d\TH:i:s'),
+                'backgroundColor' => '#f59e0b', // EduSched Amber
+                'borderColor' => '#f59e0b',
+                'textColor' => '#ffffff'
+            ];
+        })->values()->toJson();
+    @endphp
+
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-blue-900 leading-tight">
             {{ __('Student Dashboard') }}
@@ -127,11 +144,12 @@
                         </div>
                     </div>
 
-                    <div x-show="activeTab === 'calendar'" x-cloak style="display: none;">
-                        <div class="border border-gray-200 rounded-lg p-8 text-center bg-gray-50">
-                            <svg class="mx-auto h-12 w-12 text-blue-900 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <h4 class="text-lg font-bold text-gray-900">Interactive Calendar View</h4>
-                            <p class="text-gray-500 mt-1 max-w-sm mx-auto">Your scheduled appointments will populate here once we integrate the JavaScript calendar visualizer.</p>
+                    <div x-show="activeTab === 'calendar'" 
+                         x-init="$watch('activeTab', value => { if(value === 'calendar') { setTimeout(() => window.dispatchEvent(new Event('resize')), 50); } })"
+                         x-cloak style="display: none;">
+                        
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div id="calendar"></div>
                         </div>
                     </div>
 
@@ -139,4 +157,30 @@
             </div>
         </div>
     </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            
+            // Get the JSON data from PHP
+            var eventsData = {!! $calendarEvents !!};
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek', 
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                slotMinTime: '07:00:00', 
+                slotMaxTime: '19:00:00', 
+                allDaySlot: false,       
+                events: eventsData,      
+                height: 'auto',
+            });
+
+            calendar.render();
+        });
+    </script>
 </x-app-layout>

@@ -1,4 +1,21 @@
 <x-app-layout>
+    @php
+        $calendarEvents = $appointments->filter(function($app) {
+            return $app->status === 'approved';
+        })->map(function($app) {
+            return [
+                'title' => $app->student->name . ' - ' . $app->purpose,
+                // Use strict formatting to ignore browser timezone shifts
+                'start' => \Carbon\Carbon::parse($app->appointment_date)->format('Y-m-d\TH:i:s'),
+                // Automatically make the calendar block 1 hour long
+                'end' => \Carbon\Carbon::parse($app->appointment_date)->addHour()->format('Y-m-d\TH:i:s'),
+                'backgroundColor' => '#1e3a8a', // EduSched Navy Blue
+                'borderColor' => '#1e3a8a',
+                'textColor' => '#ffffff'
+            ];
+        })->values()->toJson();
+    @endphp
+    
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-blue-900 leading-tight">
             {{ __('Faculty Dashboard') }}
@@ -7,6 +24,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            
             @if(session('success'))
                 <div x-data="{ show: true }" x-show="show" x-transition class="mb-6 bg-green-50 border-l-4 border-green-500 text-green-800 p-4 rounded-md shadow-sm flex justify-between items-start">
                     <div>
@@ -18,6 +36,7 @@
                     </button>
                 </div>
             @endif
+
             <div class="mb-6 bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 border-amber-500 flex justify-between items-center">
                 <div>
                     <h3 class="text-lg font-bold text-blue-900">Welcome, {{ Auth::user()->name }}!</h3>
@@ -110,16 +129,16 @@
                         </div>
                     </div>
 
-                    <div x-show="activeTab === 'calendar'" x-cloak style="display: none;">
+                    <div x-show="activeTab === 'calendar'" 
+                         x-init="$watch('activeTab', value => { if(value === 'calendar') { setTimeout(() => window.dispatchEvent(new Event('resize')), 50); } })"
+                         x-cloak style="display: none;">
+                        
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-bold text-gray-800">My Schedule</h3>
-                            <button class="px-4 py-2 bg-blue-900 text-white rounded-md text-sm font-semibold hover:bg-blue-800 transition">Add Block-out Time</button>
                         </div>
                         
-                        <div class="border border-gray-200 rounded-lg p-8 text-center bg-gray-50">
-                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <h4 class="text-lg font-medium text-gray-900">Interactive Calendar Ready</h4>
-                            <p class="text-gray-500 mt-1 max-w-sm mx-auto">Once we set up the database, your approved appointments will automatically populate in a grid or list view here.</p>
+                        <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                            <div id="calendar"></div>
                         </div>
                     </div>
 
@@ -127,4 +146,30 @@
             </div>
         </div>
     </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            
+            // Get the JSON data from PHP
+            var eventsData = {!! $calendarEvents !!};
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek', 
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                slotMinTime: '07:00:00', 
+                slotMaxTime: '19:00:00', 
+                allDaySlot: false,       
+                events: eventsData,      
+                height: 'auto',
+            });
+
+            calendar.render();
+        });
+    </script>
 </x-app-layout>

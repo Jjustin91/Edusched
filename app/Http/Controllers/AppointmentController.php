@@ -29,20 +29,42 @@ class AppointmentController extends Controller
     }
 
     // Handles saving a new appointment requested by a student
+    // Handles saving a new appointment requested by a student
     public function store(Request $request)
     {
+        // 1. Basic Form Validation
         $request->validate([
             'faculty_id' => 'required|exists:users,id',
             'appointment_date' => 'required|date|after:now', // Must be a future date
             'purpose' => 'required|string|max:255',
         ]);
 
+        // 2. Double-Booking Prevention Check
+        $requestedTime = \Carbon\Carbon::parse($request->appointment_date);
+
+        $isBooked = Appointment::where('faculty_id', $request->faculty_id)
+            ->whereIn('status', ['pending', 'approved']) // Ignore declined appointments
+            ->whereBetween('appointment_date', [
+                // Check if any existing appointment is within 59 minutes before or after
+                $requestedTime->copy()->subMinutes(59), 
+                $requestedTime->copy()->addMinutes(59)
+            ])
+            ->exists();
+
+        // If a conflict is found, send them back with an error message
+        if ($isBooked) {
+            return back()->withInput()->withErrors([
+                'appointment_date' => 'This faculty member is already booked at that time. Please select a different schedule.'
+            ]);
+        }
+
+        // 3. Save the Appointment if the slot is free
         Appointment::create([
             'student_id' => Auth::id(),
             'faculty_id' => $request->faculty_id,
             'appointment_date' => $request->appointment_date,
             'purpose' => $request->purpose,
-            'status' => 'pending', // Always starts as pending
+            'status' => 'pending', 
         ]);
 
         return redirect()->back()->with('success', 'Appointment requested successfully! Waiting for faculty approval.');
