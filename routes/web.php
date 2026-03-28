@@ -23,9 +23,11 @@ Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
 
 // FACULTY ROUTES
 Route::middleware(['auth', 'verified', 'role:faculty'])->group(function () {
-    Route::get('/faculty/schedule', function () {
-        return view('faculty.schedule'); 
-    })->name('faculty.schedule');
+    // Replaced the closure with the controller method
+    Route::get('/faculty/schedule', [AppointmentController::class, 'facultyIndex'])->name('faculty.schedule');
+    
+    // New route for approving/declining appointments
+    Route::patch('/faculty/appointments/{appointment}/status', [AppointmentController::class, 'updateStatus'])->name('faculty.appointments.status');
 
     Route::get('/faculty/calendar', function () {
         return view('calendar');
@@ -38,8 +40,11 @@ Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
         return view('student.home'); 
     })->name('student.home');
 
-    Route::get('/student/appointments', [AppointmentController::class, 'index'])
-        ->name('appointments');
+    // Replaced the 'index' method with 'studentIndex' to match our controller
+    Route::get('/student/appointments', [AppointmentController::class, 'studentIndex'])->name('appointments');
+    
+    // New route for students to submit a booking
+    Route::post('/student/appointments', [AppointmentController::class, 'store'])->name('student.appointments.store');
 });
 
 // SHARED ROUTES

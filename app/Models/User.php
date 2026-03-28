@@ -47,4 +47,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // In app/Models/User.php
+
+    // Fetch all appointments where this user is the student
+    public function studentAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'student_id');
+    }
+
+    // Fetch all appointments where this user is the faculty member
+    public function facultyAppointments()
+    {
+        return $this->hasMany(Appointment::class, 'faculty_id');
+    }
 }
