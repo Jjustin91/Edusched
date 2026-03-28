@@ -82,7 +82,7 @@
                                 <select id="faculty_id" name="faculty_id" class="block mt-1 w-full border-gray-300 focus:border-blue-900 focus:ring-blue-900 rounded-md shadow-sm" required>
                                     <option value="" disabled selected>Choose a teacher...</option>
                                     @foreach($faculties as $faculty)
-                                        <option value="{{ $faculty->id }}" {{ old('faculty_id') == $faculty->id ? 'selected' : '' }}>
+                                        <option value="{{ $faculty->id }}" {{ (old('faculty_id') == $faculty->id || request('faculty_id') == $faculty->id) ? 'selected' : '' }}>
                                             {{ $faculty->name }}
                                         </option>
                                     @endforeach

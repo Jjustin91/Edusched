@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,6 +40,9 @@ Route::middleware(['auth', 'verified', 'role:student'])->group(function () {
     Route::get('/student/home', function () {
         return view('student.home'); 
     })->name('student.home');
+
+    // NEW: Route for viewing a specific department
+    Route::get('/student/department/{department}', [StudentController::class, 'showDepartment'])->name('student.department');
 
     // Replaced the 'index' method with 'studentIndex' to match our controller
     Route::get('/student/appointments', [AppointmentController::class, 'studentIndex'])->name('appointments');
