@@ -47,8 +47,10 @@ class AdminController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', Rules\Password::defaults()],
-            'role' => ['required', 'in:student,faculty'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'role' => ['required', 'in:student,faculty'], // Keep this validation
+            // Add validation for the new Department field. We allow it to be nullable.
+            'department' => ['nullable', 'in:CEA,CITC,CSM,COT,SHS,CSTE,MED'], 
         ]);
 
         User::create([
@@ -56,6 +58,8 @@ class AdminController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            // Save the department data!
+            'department' => $request->department, 
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'Account created successfully!');
@@ -75,12 +79,16 @@ class AdminController extends Controller
             // Ignore this user's current email when checking if the email is unique
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
             'role' => ['required', 'in:student,faculty'],
+            // Add validation for the department during updates as well.
+            'department' => ['nullable', 'in:CEA,CITC,CSM,COT,SHS,CSTE,MED'], 
         ]);
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
+            // Update the department data!
+            'department' => $request->department, 
         ]);
 
         return redirect()->route('admin.dashboard')->with('success', 'Account updated successfully!');

@@ -24,6 +24,21 @@
                     </div>
 
                     <div class="mt-4">
+                        <x-input-label for="department" :value="__('Department (For Faculty Only)')" class="text-blue-900 font-bold" />
+                        <select id="department" name="department" class="block mt-1 w-full border-gray-300 focus:border-blue-900 focus:ring-blue-900 rounded-md shadow-sm">
+                            <option value="" {{ old('department', $user->department) == '' ? 'selected' : '' }}>Not Applicable (for Students/Admin)</option>
+                            <option value="CEA" {{ old('department', $user->department) == 'CEA' ? 'selected' : '' }}>College of Engineering & Architecture (CEA)</option>
+                            <option value="CITC" {{ old('department', $user->department) == 'CITC' ? 'selected' : '' }}>College of Information Technology & Computing (CITC)</option>
+                            <option value="CSM" {{ old('department', $user->department) == 'CSM' ? 'selected' : '' }}>College of Science & Mathematics (CSM)</option>
+                            <option value="COT" {{ old('department', $user->department) == 'COT' ? 'selected' : '' }}>College of Technology (COT)</option>
+                            <option value="SHS" {{ old('department', $user->department) == 'SHS' ? 'selected' : '' }}>Senior High School (SHS)</option>
+                            <option value="CSTE" {{ old('department', $user->department) == 'CSTE' ? 'selected' : '' }}>College of Science and Technology Education (CSTE)</option>
+                            <option value="MED" {{ old('department', $user->department) == 'MED' ? 'selected' : '' }}>Medical Department (MED)</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('department')" class="mt-2" />
+                    </div>
+
+                    <div class="mt-4">
                         <x-input-label for="role" :value="__('Account Role')" class="text-blue-900 font-bold" />
                         <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-blue-900 focus:ring-blue-900 rounded-md shadow-sm" required>
                             <option value="student" {{ (old('role', $user->role) == 'student') ? 'selected' : '' }}>Student</option>

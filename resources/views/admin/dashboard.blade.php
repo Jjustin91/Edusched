@@ -104,6 +104,7 @@
                                 <thead class="bg-blue-50">
                                     <tr>
                                         <th class="py-3 px-4 border-b text-left text-sm font-bold text-blue-900">Name</th>
+                                        <th class="py-3 px-4 border-b text-left text-sm font-bold text-blue-900">Department</th>
                                         <th class="py-3 px-4 border-b text-left text-sm font-bold text-blue-900">Email</th>
                                         <th class="py-3 px-4 border-b text-center text-sm font-bold text-blue-900">Actions</th>
                                     </tr>
@@ -112,6 +113,11 @@
                                     @forelse($teachers as $teacher)
                                         <tr class="hover:bg-gray-50 transition duration-150">
                                             <td class="py-3 px-4 border-b text-sm text-gray-800 font-medium">{{ $teacher->name }}</td>
+                                            
+                                            <td class="py-3 px-4 border-b text-sm font-bold text-amber-600">
+                                                {{ $teacher->department ?? 'N/A' }}
+                                            </td>
+                                            
                                             <td class="py-3 px-4 border-b text-sm text-gray-600">{{ $teacher->email }}</td>
                                             <td class="py-3 px-4 border-b text-sm text-center">
                                                 <a href="{{ route('admin.users.edit', $teacher->id) }}" class="text-blue-600 hover:text-blue-900 font-medium mr-3">Edit</a>
@@ -125,7 +131,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="3" class="py-8 text-center text-sm text-gray-500 italic">No faculty members found in the system.</td>
+                                            <td colspan="4" class="py-8 text-center text-sm text-gray-500 italic">No faculty members found in the system.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -135,7 +141,6 @@
                             {{ $teachers->appends(['search' => $search])->links() }}
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

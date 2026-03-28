@@ -25,6 +25,21 @@
                     </div>
 
                     <div class="mt-4">
+                        <x-input-label for="department" :value="__('Department (For Faculty Only)')" class="text-blue-900 font-bold" />
+                        <select id="department" name="department" class="block mt-1 w-full border-gray-300 focus:border-blue-900 focus:ring-blue-900 rounded-md shadow-sm">
+                            <option value="" selected>Not Applicable (for Students/Admin)</option>
+                            <option value="CEA" {{ old('department') == 'CEA' ? 'selected' : '' }}>College of Engineering & Architecture (CEA)</option>
+                            <option value="CITC" {{ old('department') == 'CITC' ? 'selected' : '' }}>College of Information Technology & Computing (CITC)</option>
+                            <option value="CSM" {{ old('department') == 'CSM' ? 'selected' : '' }}>College of Science & Mathematics (CSM)</option>
+                            <option value="COT" {{ old('department') == 'COT' ? 'selected' : '' }}>College of Technology (COT)</option>
+                            <option value="SHS" {{ old('department') == 'SHS' ? 'selected' : '' }}>Senior High School (SHS)</option>
+                            <option value="CSTE" {{ old('department') == 'CSTE' ? 'selected' : '' }}>College of Science and Technology Education (CSTE)</option>
+                            <option value="MED" {{ old('department') == 'MED' ? 'selected' : '' }}>Medical Department (MED)</option>
+                        </select>
+                        <x-input-error :messages="$errors->get('department')" class="mt-2" />
+                    </div>
+                    
+                    <div class="mt-4">
                         <x-input-label for="role" :value="__('Account Role')" />
                         <select id="role" name="role" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" required>
                             <option value="" disabled selected>Select a role...</option>
