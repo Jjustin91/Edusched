@@ -25,7 +25,11 @@
                         <div class="bg-[#1B263B] rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-700 flex flex-col">
                             <div class="p-6 flex-grow flex flex-col items-center text-center">
                                 <div class="w-24 h-24 rounded-full bg-[#0D1B2A] text-white flex items-center justify-center text-3xl font-bold mb-4 shadow-inner border-4 border-[#1B263B] ring-2 ring-gray-700">
-                                    {{ substr($faculty->name, 0, 1) }}
+                                    @if($faculty->avatar)
+                                        <img class="h-full w-full rounded-full object-cover" src="{{ asset('storage/' . $faculty->avatar) }}" alt="{{ $faculty->name }}">
+                                    @else
+                                        {{ substr($faculty->name, 0, 1) }}
+                                    @endif
                                 </div>
                                 
                                 <h3 class="text-xl font-bold text-white mb-1">{{ $faculty->name }}</h3>
