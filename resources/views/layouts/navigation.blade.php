@@ -8,26 +8,32 @@
                     </a>
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    
                     @if(Auth::user()->role === 'admin')
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-white hover:text-[#2BB3C0]">
-                            Admin Dashboard
+                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                            <svg class="w-5 h-5 mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            {{ __('Dashboard') }}
                         </x-nav-link>
+
                     @elseif(Auth::user()->role === 'faculty')
-                        <x-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')" class="text-white hover:text-[#2BB3C0]">
-                            My Schedule
+                        <x-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')">
+                            <svg class="w-5 h-5 mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            {{ __('My Schedule') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('faculty.calendar')" :active="request()->routeIs('faculty.calendar')" class="text-white hover:text-[#2BB3C0]">
-                            Calendar
-                        </x-nav-link>
+
                     @elseif(Auth::user()->role === 'student')
-                        <x-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')" class="text-white hover:text-[#2BB3C0]">
-                            Home
+                        <x-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')">
+                            <svg class="w-5 h-5 mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                            {{ __('Home') }}
                         </x-nav-link>
-                        <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:text-[#2BB3C0]">
-                            Appointments
+
+                        <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')">
+                            <svg class="w-5 h-5 mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                            {{ __('Appointments') }}
                         </x-nav-link>
                     @endif
+
                 </div>
             </div>
 
@@ -85,27 +91,33 @@
     </div>
 
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    @if(Auth::user()->role === 'admin')
-                        <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')" class="text-white hover:text-[#2BB3C0]">
-                            Admin Dashboard
-                        </x-nav-link>
-                    @elseif(Auth::user()->role === 'faculty')
-                        <x-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')" class="text-white hover:text-[#2BB3C0]">
-                            My Schedule
-                        </x-nav-link>
-                        <x-nav-link :href="route('faculty.calendar')" :active="request()->routeIs('faculty.calendar')" class="text-white hover:text-[#2BB3C0]">
-                            Calendar
-                        </x-nav-link>
-                    @elseif(Auth::user()->role === 'student')
-                        <x-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')" class="text-white hover:text-[#2BB3C0]">
-                            Home
-                        </x-nav-link>
-                        <x-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')" class="text-white hover:text-[#2BB3C0]">
-                            Appointments
-                        </x-nav-link>
-                    @endif
-                </div>
+        <div class="pt-2 pb-3 space-y-1">
+            
+            @if(Auth::user()->role === 'admin')
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                    <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    {{ __('Dashboard') }}
+                </x-responsive-nav-link>
+
+            @elseif(Auth::user()->role === 'faculty')
+                <x-responsive-nav-link :href="route('faculty.schedule')" :active="request()->routeIs('faculty.schedule')">
+                    <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    {{ __('My Schedule') }}
+                </x-responsive-nav-link>
+
+            @elseif(Auth::user()->role === 'student')
+                <x-responsive-nav-link :href="route('student.home')" :active="request()->routeIs('student.home')">
+                    <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    {{ __('Home') }}
+                </x-responsive-nav-link>
+
+                <x-responsive-nav-link :href="route('appointments')" :active="request()->routeIs('appointments')">
+                    <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                    {{ __('Appointments') }}
+                </x-responsive-nav-link>
+            @endif
+
+        </div>
 
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
             <div class="px-4 flex items-center">

@@ -50,16 +50,21 @@
                     <button @click="activeTab = 'book'" 
                             :class="{ 'border-b-2 border-amber-500 text-blue-900 font-bold bg-white': activeTab === 'book', 'text-gray-500 hover:text-gray-700 hover:bg-gray-100': activeTab !== 'book' }"
                             class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
-                        + Book Consultation
+                        <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Book Consultation
                     </button>
+                    
                     <button @click="activeTab = 'list'" 
                             :class="{ 'border-b-2 border-amber-500 text-blue-900 font-bold bg-white': activeTab === 'list', 'text-gray-500 hover:text-gray-700 hover:bg-gray-100': activeTab !== 'list' }"
                             class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
+                        <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         My Appointments
                     </button>
+                    
                     <button @click="activeTab = 'calendar'" 
                             :class="{ 'border-b-2 border-amber-500 text-blue-900 font-bold bg-white': activeTab === 'calendar', 'text-gray-500 hover:text-gray-700 hover:bg-gray-100': activeTab !== 'calendar' }"
                             class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
+                        <svg class="w-5 h-5 inline-block mr-2 -mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         Calendar View
                     </button>
                 </div>
