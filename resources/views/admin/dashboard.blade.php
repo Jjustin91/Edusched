@@ -37,14 +37,21 @@
                     @endif
                 </form>
 
-                <div>
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('admin.users.pdf') }}" class="inline-flex items-center px-4 py-2 bg-[#2BB3C0] border border-transparent rounded-md font-bold text-xs text-white uppercase tracking-widest hover:bg-[#39C8D7] shadow-sm transition ease-in-out duration-150">
+                        <svg class="w-4 h-4 mr-2 -mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Export PDF
+                    </a>
+
                     <a href="{{ route('admin.users.create') }}" class="inline-flex items-center px-4 py-2 bg-[#F0B429] border border-transparent rounded-md font-bold text-xs text-[#0D1B2A] uppercase tracking-widest hover:bg-[#FFC74D] shadow-sm transition ease-in-out duration-150">
                         + Create Account
                     </a>
                 </div>
             </div>
 
-            <div x-data="{ activeTab: 'students' }" class="bg-[#1B263B] overflow-hidden shadow-sm sm:rounded-lg">
+            <div x-data="{ activeTab: localStorage.getItem('adminTab') || 'students' }" 
+                x-init="$watch('activeTab', val => localStorage.setItem('adminTab', val))" 
+                class="bg-[#1B263B] overflow-hidden shadow-sm sm:rounded-lg">
                 
                 <div class="border-b border-gray-700 bg-gray-800/20 flex">
                     <button @click="activeTab = 'students'" 

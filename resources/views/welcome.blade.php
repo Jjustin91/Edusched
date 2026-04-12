@@ -31,7 +31,6 @@
                         
                         <a href="{{ $dashboardRoute }}" class="px-5 py-2 text-[#2BB3C0] font-semibold hover:text-white transition">Dashboard</a>
                     @else
-                        <a href="{{ route('login') }}" class="px-5 py-2 text-[#BCCCDC] font-semibold hover:text-white transition">Log in</a>
                         {{-- Register link removed because admin handles account creation --}}
                     @endauth
                 </nav>

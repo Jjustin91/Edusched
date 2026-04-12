@@ -13,6 +13,7 @@ Route::get('/', function () {
 // ADMIN ROUTES
 Route::middleware(['auth', 'verified', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/admin/export-users', [AdminController::class, 'exportPDF'])->name('admin.users.pdf');
     Route::get('/admin/users/create', [AdminController::class, 'create'])->name('admin.users.create');
     Route::post('/admin/users', [AdminController::class, 'store'])->name('admin.users.store');
     

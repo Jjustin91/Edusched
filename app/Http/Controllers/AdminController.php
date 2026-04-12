@@ -12,27 +12,26 @@ class AdminController extends Controller
     // 1. The Dashboard Method
     public function dashboard(Request $request)
     {
+        // 1. Get the search term from the URL (if any)
         $search = $request->input('search');
 
-        $facultyQuery = User::where('role', 'faculty');
-        if ($search) {
-            $facultyQuery->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
-            });
-        }
-        $teachers = $facultyQuery->paginate(10);
+        // 2. Query Students with Search and Pagination (10 per page)
+        $students = User::where('role', 'student')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                             ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->paginate(5);
 
-        $studentQuery = User::where('role', 'student');
-        if ($search) {
-            $studentQuery->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('email', 'LIKE', "%{$search}%");
-            });
-        }
-        $students = $studentQuery->paginate(10);
+        // 3. Query Faculty with Search and Pagination (10 per page)
+        $teachers = User::where('role', 'faculty')
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                             ->orWhere('department', 'like', "%{$search}%");
+            })
+            ->paginate(5);
 
-        return view('admin.dashboard', compact('teachers', 'students', 'search'));
+        return view('admin.dashboard', compact('students', 'teachers', 'search'));
     }
 
     // 2. Displays the Creation Form
@@ -99,5 +98,19 @@ class AdminController extends Controller
     {
         $user->delete();
         return redirect()->route('admin.dashboard')->with('success', 'Account successfully deleted.');
+    }
+
+    // Generates a PDF Report of all registered users
+    public function exportPDF()
+    {
+        // Fetch all data (we don't paginate the PDF, we want the whole report)
+        $students = User::where('role', 'student')->get();
+        $teachers = User::where('role', 'faculty')->get();
+
+        // Load a special Blade view and pass the data to it
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('admin.report', compact('students', 'teachers'));
+        
+        // Download the file
+        return $pdf->download('EduSched_User_Report.pdf');
     }
 }
