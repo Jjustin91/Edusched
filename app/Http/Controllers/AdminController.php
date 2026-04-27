@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Appointment;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
@@ -30,8 +31,13 @@ class AdminController extends Controller
                              ->orWhere('department', 'like', "%{$search}%");
             })
             ->paginate(5);
+        // 2. Fetch all appointments and their related users
+        $appointments = Appointment::with(['student', 'faculty'])
+            ->orderBy('appointment_date', 'desc')
+            ->paginate(10, ['*'], 'appointments_page'); // Unique pagination parameter if you have multiple paginated tables on one page
 
-        return view('admin.dashboard', compact('students', 'teachers', 'search'));
+        // 3. Pass the $appointments variable to the view
+        return view('admin.dashboard', compact('students', 'teachers', 'search', 'appointments'));
     }
 
     // 2. Displays the Creation Form

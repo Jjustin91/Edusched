@@ -12,7 +12,6 @@
                 <div x-data="{ show: true }" x-show="show" x-transition class="mb-6 bg-green-500/10 border-l-4 border-green-500 text-green-300 p-4 rounded-md shadow-sm flex justify-between items-start">
                     <div>
                         <p class="font-bold text-sm uppercase tracking-wider mb-1">Success</p>
-
                         <p class="text-sm">{{ session('success') }}</p>
                     </div>
                     <button @click="show = false" class="text-green-300 hover:text-white text-xl font-bold leading-none focus:outline-none">
@@ -56,13 +55,18 @@
                 <div class="border-b border-gray-700 bg-gray-800/20 flex">
                     <button @click="activeTab = 'students'" 
                             :class="{ 'border-b-2 border-[#F0B429] text-white font-bold bg-white/5': activeTab === 'students', 'text-gray-400 hover:text-white hover:bg-white/5': activeTab !== 'students' }"
-                            class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/2 text-center">
+                            class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
                         Registered Students
                     </button>
                     <button @click="activeTab = 'teachers'" 
                             :class="{ 'border-b-2 border-[#F0B429] text-white font-bold bg-white/5': activeTab === 'teachers', 'text-gray-400 hover:text-white hover:bg-white/5': activeTab !== 'teachers' }"
-                            class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/2 text-center">
+                            class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
                         Faculty & Teachers
+                    </button>
+                    <button @click="activeTab = 'appointments'" 
+                            :class="{ 'border-b-2 border-[#F0B429] text-white font-bold bg-white/5': activeTab === 'appointments', 'text-gray-400 hover:text-white hover:bg-white/5': activeTab !== 'appointments' }"
+                            class="py-4 px-6 text-sm font-medium focus:outline-none transition-colors duration-150 w-1/3 text-center">
+                        Appointments
                     </button>
                 </div>
 
@@ -149,6 +153,47 @@
                             {{ $teachers->appends(['search' => $search])->links() }}
                         </div>
                     </div>
+
+                    <div x-show="activeTab === 'appointments'" x-cloak style="display: none;">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full bg-[#0D1B2A] border border-gray-700 rounded-lg">
+                                <thead class="bg-gray-800/30">
+                                    <tr>
+                                        <th class="py-3 px-4 border-b border-gray-700 text-left text-sm font-bold text-white">Student</th>
+                                        <th class="py-3 px-4 border-b border-gray-700 text-left text-sm font-bold text-white">Faculty</th>
+                                        <th class="py-3 px-4 border-b border-gray-700 text-left text-sm font-bold text-white">Date & Time</th>
+                                        <th class="py-3 px-4 border-b border-gray-700 text-left text-sm font-bold text-white">Purpose</th>
+                                        <th class="py-3 px-4 border-b border-gray-700 text-center text-sm font-bold text-white">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @forelse($appointments as $appointment)
+                                        <tr class="hover:bg-white/5 transition duration-150">
+                                            <td class="py-3 px-4 border-b border-gray-700 text-sm text-gray-200 font-medium">{{ $appointment->student->name ?? 'N/A' }}</td>
+                                            <td class="py-3 px-4 border-b border-gray-700 text-sm text-gray-200">{{ $appointment->faculty->name ?? 'N/A' }}</td>
+                                            <td class="py-3 px-4 border-b border-gray-700 text-sm text-gray-400">{{ \Carbon\Carbon::parse($appointment->appointment_date)->format('M d, Y h:i A') }}</td>
+                                            <td class="py-3 px-4 border-b border-gray-700 text-sm text-gray-400">{{ $appointment->purpose }}</td>
+                                            <td class="py-3 px-4 border-b border-gray-700 text-sm text-center">
+                                                <span class="px-2 py-1 rounded text-xs font-bold uppercase tracking-wider
+                                                    {{ $appointment->status == 'approved' ? 'bg-green-500/20 text-green-400 border border-green-500/50' : 
+                                                       ($appointment->status == 'declined' ? 'bg-red-500/20 text-red-400 border border-red-500/50' : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50') }}">
+                                                    {{ ucfirst($appointment->status) }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="5" class="py-8 text-center text-sm text-gray-500 italic">No appointments found.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4">
+                            {{ $appointments->appends(request()->query())->links() }}
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
