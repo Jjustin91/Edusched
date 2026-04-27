@@ -29,7 +29,6 @@ class AppointmentController extends Controller
     }
 
     // Handles saving a new appointment requested by a student
-    // Handles saving a new appointment requested by a student
     public function store(Request $request)
     {
         // 1. Basic Form Validation
